@@ -1,0 +1,9 @@
+{
+  "id": "local-meeting-scribe",
+  "name": "Local Meeting Scribe",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Local-first meeting capture with manual speaker labeling and Python companion processing.",
+  "author": "LocalMeetingScribe",
+  "isDesktopOnly": true
+}

@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+numpy
+sounddevice
+faster-whisper
+pyaudiowpatch
+pycaw
+stopwordsiso
+langdetect

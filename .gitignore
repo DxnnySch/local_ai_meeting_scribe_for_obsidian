@@ -1,0 +1,14 @@
+__pycache__/
+venv/
+node_modules/
+*.spec
+*.spec.exe
+*.spec.zip
+*.spec.tar.gz
+*.spec.tar.bz2
+*.spec.tar.xz
+*.spec.tar.lzma
+*.spec.tar.lz
+*.spec.tar.zst
+*.spec.tar.zstd
+package-lock.json

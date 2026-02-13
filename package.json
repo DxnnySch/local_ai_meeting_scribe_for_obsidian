@@ -1,0 +1,24 @@
+{
+  "name": "local-meeting-scribe",
+  "version": "0.1.0",
+  "description": "Obsidian plugin for local-first meeting capture and notes.",
+  "main": "main.js",
+  "scripts": {
+    "build": "node esbuild.config.mjs production",
+    "dev": "node esbuild.config.mjs",
+    "check": "tsc --noEmit"
+  },
+  "keywords": [
+    "obsidian",
+    "plugin",
+    "meeting",
+    "transcription"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "esbuild": "^0.25.9",
+    "obsidian": "^1.8.10",
+    "typescript": "^5.9.2"
+  }
+}
