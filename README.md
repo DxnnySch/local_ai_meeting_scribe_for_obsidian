@@ -22,6 +22,26 @@ Local-first meeting capture for Obsidian with a Python companion app.
 
 ## Quick start
 
+### Recommended: tray executable (end-user install)
+
+1. Download `LocalMeetingScribeCompanion.exe` from the latest project release.
+1. Run it once. It will:
+   - start the local companion service on `http://127.0.0.1:8000`
+   - add a tray icon to Windows system icons
+   - register itself to auto-start at login
+1. Right-click the tray icon and select `Install Ollama + pull mistral` to automate local LLM setup.
+   - The app first tries `winget` for Ollama.
+   - If automatic install fails, it opens the official Ollama download page.
+1. In Obsidian plugin settings, keep `Companion server URL` set to `http://127.0.0.1:8000`.
+
+Optional command-line setup:
+
+```powershell
+.\LocalMeetingScribeCompanion.exe --setup-ollama --model mistral
+```
+
+### Developer: Python script workflow
+
 1. Create and activate a Python virtual environment.
 1. Install dependencies:
 
@@ -49,6 +69,20 @@ Optional flags:
    - Open plugin settings and verify `Companion server URL` is `http://127.0.0.1:8000`
    - Use ribbon icon or command palette: `Start / Stop capture`
    - Select capture profile in plugin settings (`Fast`, `Balanced`, `Pristine`)
+
+## Companion executable build/distribution
+
+Build the Windows tray executable:
+
+```powershell
+.\build_companion_exe.ps1 -InstallDeps
+```
+
+Output:
+
+- `dist\LocalMeetingScribeCompanion.exe`
+
+This executable bundles the companion service and tray launcher, and is intended as the primary distribution artifact for non-developer users.
 
 ## Plugin build steps
 
@@ -80,6 +114,26 @@ Optional skip build:
 ```powershell
 .\release.ps1 -VaultPath "D:\Path\To\Your\Vault" -SkipBuild
 ```
+
+## Plugin GitHub releases (Obsidian-compatible)
+
+This repo includes `.github/workflows/release.yml` and creates a draft GitHub release for each pushed tag.
+
+To publish a plugin release:
+
+1. Ensure GitHub Actions workflow permissions are set to `Read and write permissions`.
+1. Update `manifest.json` version.
+1. Create an annotated tag matching the manifest version:
+
+```powershell
+git tag -a 0.1.0 -m "0.1.0"
+git push origin 0.1.0
+```
+
+1. The workflow builds and attaches:
+   - plugin files: `main.js`, `manifest.json` (and `styles.css` if present)
+   - companion executable: `LocalMeetingScribeCompanion.exe`
+1. Add release notes and publish the draft release in GitHub.
 
 ## Notes on quality and hardware
 

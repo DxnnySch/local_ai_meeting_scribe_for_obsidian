@@ -7,29 +7,51 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18.x"
 
       - name: Build plugin
+        shell: pwsh
         run: |
           npm install
           npm run build
 
-      - name: Create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tag="${GITHUB_REF#refs/tags/}"
+      - name: Use Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
 
-          gh release create "$tag" \
-            --title="$tag" \
-            --draft \
-            main.js manifest.json styles.css
+      - name: Build companion executable
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install -r requirements_companion_exe.txt
+          .\build_companion_exe.ps1
+
+      - name: Collect release artifacts
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path "release-assets" -Force | Out-Null
+          Copy-Item "main.js" "release-assets/main.js" -Force
+          Copy-Item "manifest.json" "release-assets/manifest.json" -Force
+          if (Test-Path "styles.css") {
+            Copy-Item "styles.css" "release-assets/styles.css" -Force
+          }
+          Copy-Item "dist\LocalMeetingScribeCompanion.exe" "release-assets\LocalMeetingScribeCompanion.exe" -Force
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          draft: true
+          files: release-assets/*
